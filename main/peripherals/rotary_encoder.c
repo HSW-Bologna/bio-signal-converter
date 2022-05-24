@@ -1,5 +1,8 @@
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include <driver/gpio.h>
 #include "hardwareprofile.h"
+#include "rotary_encoder.h"
 
 
 void rotary_encoder_init(void) {
@@ -11,6 +14,20 @@ void rotary_encoder_init(void) {
         .pull_up_en   = GPIO_PULLUP_DISABLE,
     };
     ESP_ERROR_CHECK(gpio_config(&config));
+}
+
+
+uint8_t rotary_encoder_stable_read(void) {
+    uint8_t old_read, new_read;
+
+    do {
+        old_read = rotary_encoder_read();
+        vTaskDelay(pdMS_TO_TICKS(10));
+        new_read = rotary_encoder_read();
+        vTaskDelay(pdMS_TO_TICKS(10));
+    } while (old_read != new_read);
+
+    return new_read;
 }
 
 

@@ -25,7 +25,7 @@ static void heartbit_timer(void *arg) {
     gpio_set_level(HAP_RUN, blink);
     blink = !blink;
 
-    xTimerChangePeriod(timer, pdMS_TO_TICKS(hb_period), portMAX_DELAY);
+    xTimerChangePeriod(timer, blink ? pdMS_TO_TICKS(hb_period) : pdMS_TO_TICKS(20), portMAX_DELAY);
 }
 
 

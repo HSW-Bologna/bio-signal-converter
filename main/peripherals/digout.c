@@ -4,10 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
 #include "driver/gpio.h"
+#include "digout.h"
 
 
 void digout_init(void) {
@@ -23,9 +21,10 @@ void digout_init(void) {
 }
 
 
-void digout_rele_update(gpio_num_t rele, int val) {
-    val = val > 0;
-    gpio_set_level(rele, val);
+void digout_rele_update(digout_t rele, int val) {
+    const gpio_num_t gpios[] = {RELE1, RELE2, RELE3, RELE4};
+    val                      = val > 0;
+    gpio_set_level(gpios[rele], val);
 }
 
 

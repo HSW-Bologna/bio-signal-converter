@@ -4,9 +4,9 @@
 #include <stdint.h>
 
 typedef struct {
-    uint32_t id;
+    uint32_t pulse_duration;
 } model_t;
 
-void model_init(model_t *model);
+void model_init(model_t *model, uint32_t pulse_duration);
 
 #endif

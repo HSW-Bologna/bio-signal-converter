@@ -16,10 +16,6 @@ static const char *TAG = "Digin";
 
 
 static debounce_filter_t filter = {0};
-static SemaphoreHandle_t sem    = NULL;
-
-
-static void periodic_read(TimerHandle_t timer);
 
 
 void digin_init(void) {
@@ -35,19 +31,11 @@ void digin_init(void) {
     gpio_config(&io_conf);
 
     debounce_filter_init(&filter);
-    sem = xSemaphoreCreateMutex();
-
-    TimerHandle_t timer = xTimerCreate("timerInput", pdMS_TO_TICKS(5), pdTRUE, NULL, periodic_read);
-    xTimerStart(timer, portMAX_DELAY);
 }
 
 
 int digin_get(digin_t digin) {
-    int res = 0;
-    xSemaphoreTake(sem, portMAX_DELAY);
-    res = debounce_read(&filter, digin);
-    xSemaphoreGive(sem);
-    return res;
+    return debounce_read(&filter, digin);
 }
 
 
@@ -57,18 +45,10 @@ int digin_take_reading(void) {
     input |= (!gpio_get_level(IN2)) << 1;
     input |= (!gpio_get_level(IN3)) << 2;
     input |= (!gpio_get_level(IN4)) << 3;
-    return debounce_filter(&filter, input, 10);
+    return debounce_filter(&filter, input, 5);
 }
 
 
 unsigned int digin_get_inputs(void) {
     return debounce_value(&filter);
-}
-
-
-static void periodic_read(TimerHandle_t timer) {
-    (void)timer;
-    xSemaphoreTake(sem, portMAX_DELAY);
-    digin_take_reading();
-    xSemaphoreGive(sem);
 }
