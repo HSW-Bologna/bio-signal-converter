@@ -16,7 +16,7 @@ static void pulse_end_timer(TimerHandle_t timer);
 
 static const char   *TAG = "Controller";
 static TimerHandle_t timers[NUM_DIGOUTS];
-static const int     inverted[NUM_DIGOUTS] = {0, 0, 1, 1};
+static const int     inverted[NUM_DIGOUTS] = {0, 0, 0, 0};
 
 
 void controller_init(model_t *pmodel) {
